@@ -17,7 +17,13 @@ class CarController extends Controller
     }
 
     public function show($id) {
-        $car = Car::findOrFail($id);
+        $car = Car::find($id);
+
+        if($car == null) {
+            return response()->json([
+                'messages' => 'Car not found'
+            ], 404);
+        }
 
         return response()->json([
             'messages' => 'success',
@@ -43,7 +49,13 @@ class CarController extends Controller
     }
 
     public function update(Request $request, $id) {
-        $car = Car::findOrFail($id);
+        $car = Car::find($id);
+
+        if($car == null) {
+            return response()->json([
+                'messages' => 'Car not found'
+            ], 404);
+        }
 
         $car->update($request->all());
 
@@ -54,7 +66,13 @@ class CarController extends Controller
     }
 
     public function destroy($id) {
-        $car = Car::findOrFail($id);
+        $car = Car::find($id);
+
+        if($car == null) {
+            return response()->json([
+                'messages' => 'Car not found'
+            ], 404);
+        }
 
         $car->delete();
 

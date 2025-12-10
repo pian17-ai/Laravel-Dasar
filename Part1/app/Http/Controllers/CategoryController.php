@@ -17,7 +17,13 @@ class CategoryController extends Controller
     }
 
     public function show($id) {
-        $category = Category::findOrFail($id);
+        $category = Category::find($id);
+
+        if ($category == null) {
+            return response()->json([
+                'messages' => 'Category not found'
+            ]);
+        }
 
         return response()->json([
             'messages' => 'success',
@@ -25,7 +31,7 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function insert(Request $request) {
+    public function store(Request $request) {
         $validated = $request->validate([
             'name' => 'required',
             'description' => 'required'
@@ -36,11 +42,11 @@ class CategoryController extends Controller
         return response()->json([
             'messages' => 'success',
             'data' => $category
-        ]);
+        ], 201);
     }
 
     public function update(Request $request, $id) {
-        $category = Category::findOrFail($id);
+        $category = Category::find($id);
 
         if ($category == null) {
             return response()->json([
@@ -57,7 +63,7 @@ class CategoryController extends Controller
     }
 
     public function destroy($id) {
-        $category = Category::findOrFail($id);
+        $category = Category::find($id);
 
         if ($category == null) {
             return response()->json([
@@ -69,6 +75,6 @@ class CategoryController extends Controller
 
         return response()->json([
             'messages' => 'deleted'
-        ]);
+        ], 404);
     }
 }
