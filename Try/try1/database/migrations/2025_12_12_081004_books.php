@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('publisher');
             $table->integer('pages');
             $table->foreignId('category')->constrained('categories');
+            $table->timestamps();
         });
     }
 

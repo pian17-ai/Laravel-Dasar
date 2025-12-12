@@ -14,4 +14,8 @@ class User extends Model
         'email',
         'password'
     ];
+
+    public function reviews() {
+        $this->hasMany('reviews');
+    }
 }

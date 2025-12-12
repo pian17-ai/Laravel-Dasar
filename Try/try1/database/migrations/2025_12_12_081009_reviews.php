@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('book')->constrained('books');
             $table->string('messages');
             $table->integer('rating');
+            $table->timestamps();
         });
     }
 
