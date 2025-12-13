@@ -15,10 +15,10 @@ class Book extends Model
     ];
 
     public function categories() {
-        return $this->belongsTo('categories');
+        return $this->belongsTo(Category::class);
     }
 
     public function reviews() {
-        return $this->hasMany('reviews');
+        return $this->hasMany(Review::class);
     }
 }
