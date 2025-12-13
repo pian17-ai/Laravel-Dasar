@@ -11,6 +11,6 @@ class Category extends Model
     ];
 
     public function books() {
-        $this->hasMany('books');
+        return $this->hasMany('books');
     }
 }

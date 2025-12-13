@@ -16,6 +16,6 @@ class User extends Model
     ];
 
     public function reviews() {
-        $this->hasMany('reviews');
+        return $this->hasMany('reviews');
     }
 }

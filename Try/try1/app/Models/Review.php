@@ -14,10 +14,10 @@ class Review extends Model
     ];
 
     public function users() {
-        $this->belongsTo('users');
+        return $this->belongsTo('users');
     }
 
     public function books() {
-        $this->belongsTo('books');
+        return $this->belongsTo('books');
     }
 }
