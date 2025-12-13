@@ -18,14 +18,14 @@ class ReviewController extends Controller
         }
 
         $validated = $request->validate([
-            'book' => 'required',
+            'book' => 'required|exists:books,id',
             'messages' => 'required',
-            'rating' => 'required'
+            'rating' => 'required|integer|min:1|max:5'
         ]);
 
         Review::create([
             'user' => $user->id,
-            'book' => $request->book,
+            'book' => $request->book_id,
             'messages' => $request->messages,
             'rating' => $request->rating
         ]);
