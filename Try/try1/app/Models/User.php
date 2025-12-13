@@ -7,15 +7,14 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Model
 {
-    use HasApiTokens;
-
     protected $fillable = [
         'username',
         'email',
         'password'
     ];
 
-    public function reviews() {
+    public function reviews()
+    {
         return $this->hasMany(Review::class);
     }
 }
