@@ -17,7 +17,7 @@ class Course extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function enrollment() {
-        return $this->hasMany(Enrollments::class);
+    public function enrollments() {
+        return $this->hasMany(Enrollment::class);
     }
 }

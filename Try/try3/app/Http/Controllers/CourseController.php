@@ -34,6 +34,12 @@ class CourseController extends Controller
             ]);
         }
 
+        if ($user->role == 'student') {
+            return response()->json([
+                'messages' => 'you cant create course'
+            ]);
+        }
+
         $request->validate([
             'title' => 'required',
             'description' => 'required',
@@ -53,8 +59,16 @@ class CourseController extends Controller
         ], 201);
     }
 
-    public function update(Request $request) {
-        $course = Course::where('id', $request->id)->first();
+    public function update(Request $request, $id) {
+        $user = $request->user();
+
+        if ($user->role == 'student') {
+            return response()->json([
+                'messages' => 'you cant update the course'
+            ]);
+        }
+
+        $course = Course::where('id', $id)->first();
 
         if (!$course) {
             return response()->json([
@@ -62,11 +76,7 @@ class CourseController extends Controller
             ], 404);
         }
 
-        $course = Course::update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'price' => $request->price
-        ]);
+        $course->update($request->all());
 
         return response()->json([
             'messages' => 'course updated',
@@ -74,8 +84,24 @@ class CourseController extends Controller
         ], 202);
     }
 
-    public function delete(Request $request) {
-        Course::delete($request->id);
+    public function delete(Request $request, $id) {
+        $user = $request->user();
+
+        if ($user->role == 'student') {
+            return response()->json([
+                'messages' => 'you cant delete the course'
+            ]);
+        }
+
+        $course = Course::where('id', $id)->first();
+
+        if (!$course) {
+            return response()->json([
+                'messages' => 'courses not found'
+            ]);
+        }
+
+        $course->delete();
 
         return response()->json([
             'messages' => 'course deleted'

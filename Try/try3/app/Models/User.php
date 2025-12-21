@@ -17,7 +17,7 @@ class User extends Model
     ];
 
     public function enrollments() {
-        return $this->hasMany(Enrollments::class);
+        return $this->hasMany(Enrollment::class);
     }
 
     public function courses() {
