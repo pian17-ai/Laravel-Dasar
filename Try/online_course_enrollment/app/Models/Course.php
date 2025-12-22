@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Course extends Model
+{
+    protected $fillable = [
+        'title',
+        'description',
+        'price',
+        'created_by'
+    ];
+
+    public function createdby() {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function enrollments() {
+        return $this->hasMany(Enrollment::class);
+    }
+}
