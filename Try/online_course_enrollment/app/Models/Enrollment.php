@@ -12,6 +12,8 @@ class Enrollment extends Model
         'enrolled_at'
     ];
 
+    public $timestamps = false;
+
 
     public function course() {
         return $this->belongsTo(Course::class);
