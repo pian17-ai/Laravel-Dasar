@@ -36,10 +36,12 @@ class CourseController extends Controller
             ]);
         }
 
-        $validated = $request->validated();
+        $request->validated();
 
         $course = Course::create([
-            $validated,
+            'title' => $request->title,
+            'description' => $request->description,
+            'price' => $request->price,
             'created_by' => $user->id
         ]);
 

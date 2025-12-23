@@ -13,17 +13,16 @@ class EnrollmentController extends Controller
     public function show(Request $request) {
         $user = $request->user();
 
-        // $courses = Course::where('user_id', $user->id);
-        $courses = Enrollment::find($user->id, 'user_id');
+        $enrollment = Enrollment::where('user_id', $user->id)->get();
 
-        if ($courses == null) {
+        if ($enrollment == null) {
             return response()->json([
-                'messages' => 'nothing your enrollment'
+                'messages' => 'your course is null'
             ]);
         }
 
         return response()->json([
-            'courses' => $courses
+            'my_course' => $enrollment
         ]);
     }
 
