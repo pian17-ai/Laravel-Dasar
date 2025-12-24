@@ -33,17 +33,17 @@ class EnrollmentController extends Controller
         $student = $request->user();
 
         $request->validate([
-            'course_id' => 'required'
+            'course_id' => 'required|exists:courses,id'
         ]);
 
-        $course = Course::find($request->course_id);
+        // $course = Course::find($request->course_id); // not manually just add "exists:courses,id" is correct
         $enroll = Enrollment::where('course_id', $request->course_id)->where('user_id', $student->id)->first();
 
-        if ($course == null) {
-            return response()->json([
-                'messages' => 'course not found'
-            ], 404);
-        }
+        // if ($course == null) {
+        //     return response()->json([
+        //         'messages' => 'course not found'
+        //     ], 404);
+        // }
 
         if ($enroll) {
             return response()->json([

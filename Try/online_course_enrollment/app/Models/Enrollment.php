@@ -19,7 +19,7 @@ class Enrollment extends Model
         return $this->belongsTo(Course::class);
     }
 
-    public function users() {
-        return $this->hasMany(User::class);
+    public function user() {
+        return $this->belongsTo(User::class); //this incorrect because in enrollment have 1 course and 1 user
     }
 }

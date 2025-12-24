@@ -18,7 +18,7 @@ class StoreEnrollmentResource extends JsonResource
         return [
             'messages' => 'successfully enrolled',
             'data' => [
-                'course' => Course::find($request->course_id)->title,
+                'course' => $this->course->title, // in controller done $enrollment->load('course'); so use $this
                 'enrolled_at' => $this->enrolled_at
             ]
         ];

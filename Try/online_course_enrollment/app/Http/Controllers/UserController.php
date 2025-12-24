@@ -32,7 +32,7 @@ class UserController extends Controller
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'messages' => 'wrong email or password'
-            ], 402);
+            ], 401); //the incorrect login status, because 402 is payment required, if unauthorized is 401
         }
 
         $token = $user->createToken('auth-token')->plainTextToken;

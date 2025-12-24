@@ -10,7 +10,7 @@ class CourseController extends Controller
 {
     public function index()
     {
-        $courses = Course::get()->all();
+        $courses = Course::all(); //this double work, just write all() is correct
 
         return response()->json([
             'courses' => $courses

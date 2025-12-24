@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('course_id')->constrained('courses');
             $table->date('enrolled_at');
+
+            $table->unique(['user_id', 'course_id']); //the db should be the last bastion, because controller could miss out
         });
     }
 
