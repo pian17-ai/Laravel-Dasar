@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Event extends Model
+{
+    protected $fillable = [
+        'title',
+        'location',
+        'event_date',
+        'price',
+        'created_by'
+    ];
+
+    public function creator() {
+        return $this->belongsTo(User::class);
+    }
+
+    public function bookings() {
+        return $this->hasMany(Booking::class);
+    }
+}
