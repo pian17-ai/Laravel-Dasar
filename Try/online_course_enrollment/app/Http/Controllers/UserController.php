@@ -51,6 +51,6 @@ class UserController extends Controller
 
         return response()->json([
             'messages' => 'logout success'
-        ]. 200);
+        ], 200);
     }
 }

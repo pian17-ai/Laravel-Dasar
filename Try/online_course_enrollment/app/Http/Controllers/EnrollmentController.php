@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Enrollments\ShowEnrollmentResource;
+use App\Http\Resources\Enrollments\StoreEnrollmentResource;
 use App\Models\Course;
 use App\Models\Enrollment;
 use Illuminate\Http\Request;
 
+use function PHPUnit\Framework\isEmpty;
 use function Symfony\Component\Clock\now;
 
 class EnrollmentController extends Controller
@@ -13,17 +16,17 @@ class EnrollmentController extends Controller
     public function show(Request $request) {
         $user = $request->user();
 
-        $enrollment = Enrollment::where('user_id', $user->id)->get();
+        $enrollments = Enrollment::where('user_id', $user->id)->get();
 
-        if ($enrollment == null) {
+        if ($enrollments->isEmpty()) {
             return response()->json([
                 'messages' => 'your course is null'
-            ]);
+            ], 200);
         }
 
-        return response()->json([
-            'my_course' => $enrollment
-        ]);
+        $enrollments->load('course');
+
+        return ShowEnrollmentResource::collection($enrollments);
     }
 
     public function store(Request $request) {
@@ -51,12 +54,11 @@ class EnrollmentController extends Controller
         $enrollment = Enrollment::create([
             'user_id' => $student->id,
             'course_id' => $request->course_id,
-            'enrolled_at' => now()
+            'enrolled_at' => now()->format('Y-m-d')
         ]);
 
-        return response()->json([
-            'messages' => 'enrollment added',
-            'data' => $enrollment
-        ], 201);
+        $enrollment->load('course');
+
+        return new StoreEnrollmentResource($enrollment);
     }
 }
