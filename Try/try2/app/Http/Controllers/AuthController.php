@@ -26,7 +26,6 @@ class AuthController extends Controller
             'user' => new AuthResource($user),
             'token' => $token
         ], 201);
-
     }
 
     public function login(AuthRequest $request) {
