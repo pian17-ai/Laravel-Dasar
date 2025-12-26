@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Booking\ShowBookingResource;
+use App\Http\Resources\Booking\StoreBookingResource;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 
@@ -16,7 +18,7 @@ class BookingController extends Controller
 
         return response()->json([
             'message' => 'success get booking',
-            'data' => $data
+            'data' => ShowBookingResource::collection($data)
         ], 200);
     }
 
@@ -35,15 +37,17 @@ class BookingController extends Controller
             ], 409);
         }
 
-        $data = Booking::create([
+        $booking = Booking::create([
             'user_id' => $user->id,
             'event_id' => $request->event_id,
             'booked_at' => now()
         ]);
 
+        $data = Booking::where('id', $booking->id)->get();
+
         return response()->json([
             'message' => 'event booked',
-            'data' => $data
+            'data' => StoreBookingResource::collection($data)
         ], 201);
     }
 }
