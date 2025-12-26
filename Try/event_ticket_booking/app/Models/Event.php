@@ -15,7 +15,7 @@ class Event extends Model
     ];
 
     public function creator() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'created_by'); //because yout fill is created_by not user_id
     }
 
     public function bookings() {

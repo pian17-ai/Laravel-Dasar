@@ -51,7 +51,7 @@ class EventController extends Controller
     public function update(EventRequest $request, Event $event) {
         $this->authorize('update', $event);
         $request->validated();
-        $event = Event::where('id', $event->id)->first();
+        //$event = Event::where('id', $event->id)->first(); (no need, because the Model Event give permission)
 
         $event->update($request->all());
 
@@ -64,7 +64,7 @@ class EventController extends Controller
     public function destroy(Event $event) {
         $this->authorize('delete', $event);
         
-        $event->delete($event->id);
+        $event->delete(); // If you use Event $event -> Event::where('id', $id)
 
         return response()->json([
             'message' => 'event deleted'

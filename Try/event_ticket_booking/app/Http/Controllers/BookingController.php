@@ -7,6 +7,7 @@ use App\Http\Resources\Booking\StoreBookingResource;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 
+use function PHPUnit\Framework\isEmpty;
 use function Symfony\Component\Clock\now;
 
 class BookingController extends Controller
@@ -15,6 +16,12 @@ class BookingController extends Controller
         $user = $request->user();
 
         $data = Booking::where('user_id', $user->id)->get();
+
+        if ($data->isEmpty()) {
+            return response()->json([
+                'message' => 'you have no bookings yet'
+            ], 200);
+        } 
 
         return response()->json([
             'message' => 'success get booking',
