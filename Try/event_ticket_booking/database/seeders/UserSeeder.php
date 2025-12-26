@@ -16,13 +16,13 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'name' => 'admin',
-                'email' => 'admin@example.com',
+                'name' => 'admin1',
+                'email' => 'admin1@example.com',
                 'password' => Hash::make(123456)
             ],
             [
-                'name' => 'admin',
-                'email' => 'admin1@example.com',
+                'name' => 'admin2',
+                'email' => 'admin2@example.com',
                 'password' => Hash::make(123456)
             ],
             [
@@ -30,6 +30,11 @@ class UserSeeder extends Seeder
                 'email' => 'pian@example.com',
                 'password' => Hash::make(123456)
             ],
+            [
+                'name' => 'umaru',
+                'email' => 'umaru@example.com',
+                'password' => Hash::make(123456)
+            ]
         ]);
     }
 }

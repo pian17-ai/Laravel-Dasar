@@ -24,6 +24,13 @@ class EventSeeder extends Seeder
                 'price' => 0,
                 'created_by' => 1
             ],
+            [
+                'title' => 'Christmas Cosplay Event',
+                'location' => 'Tamini Square, East Jakarta',
+                'event_date' => Carbon::now()->addDays(20),
+                'price' => 40000,
+                'created_by' => 1
+            ],
         ]);
     }
 }

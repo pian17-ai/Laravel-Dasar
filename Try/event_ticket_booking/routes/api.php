@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -17,4 +18,10 @@ Route::middleware('auth:sanctum', 'admin')->group(function() {
     Route::post('/event', [EventController::class, 'store']);
     Route::put('/event/{event}', [EventController::class, 'update']);
     Route::delete('/event/{event}', [EventController::class, 'destroy']);
+});
+
+// booking
+Route::middleware('auth:sanctum')->group(function() {
+    Route::get('/my-bookings', [BookingController::class, 'index']);
+    Route::post('/book', [BookingController::class, 'store']);
 });
