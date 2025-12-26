@@ -9,59 +9,17 @@ use Illuminate\Auth\Access\Response;
 class EventPolicy
 {
     /**
-     * Determine whether the user can view any models.
+     * Create a new policy instance.
      */
-    public function viewAny(User $user): bool
-    {
-        return false;
+    public function update (User $user, Event $event) {
+        if ($user->id !== $event->created_by) {
+            return Response::deny('access forbidden');
+        }
+        
+        return Response::allow();
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, Event $event): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, Event $event): bool
-    {
-        return $user->role === 'admin'
-            && $event->created_by === $user->id;
-    }
-
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, Event $event): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Event $event): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Event $event): bool
-    {
-        return false;
+    public function delete (User $user, Event $event) {
+        return $user->id === $event->created_by;
     }
 }

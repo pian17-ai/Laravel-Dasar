@@ -13,8 +13,8 @@ Route::middleware('auth:sanctum')->post('/logout', [UserController::class, 'logo
 // event
 Route::get('/events', [EventController::class, 'index']);
 Route::get('/event/{id}', [EventController::class, 'show']);
-Route::middleware('auth:sanctum')->post('/event', [EventController::class, 'store']);
-Route::middleware('auth:sacntum', 'admin')->group(function() {
-    // Route::put('/{id}', EventController::class, 'update');
-    // Route::delete('/{id}', EventController::class, 'delete');
+Route::middleware('auth:sanctum', 'admin')->group(function() {
+    Route::post('/event', [EventController::class, 'store']);
+    Route::put('/event/{event}', [EventController::class, 'update']);
+    Route::delete('/event/{event}', [EventController::class, 'destroy']);
 });

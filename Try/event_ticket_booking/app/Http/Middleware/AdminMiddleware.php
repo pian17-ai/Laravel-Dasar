@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ADminMiddleware
+class AdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,6 +15,12 @@ class ADminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if ($request->user()->role !== 'admin') {
+            return response()->json([
+                'message' => 'access forbidden'
+            ], 403);
+        }
+
         return $next($request);
     }
 }

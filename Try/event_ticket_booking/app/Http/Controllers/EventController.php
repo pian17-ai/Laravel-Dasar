@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Event\StoreEventRequest;
+use App\Http\Requests\Event\EventRequest;
 use App\Models\Event;
 use Illuminate\Http\Request;
 
@@ -30,15 +30,9 @@ class EventController extends Controller
         ], 200);
     }
 
-    public function store(StoreEventRequest $request) {
+    public function store(EventRequest $request) {
         $request->validated();
         $user = $request->user();
-
-        if ($user->role !== 'admin') {
-            return response()->json([
-                'message' => 'unauthorized'
-            ], 403);
-        }
         
         $data = Event::create([
             'title' => $request->title,
@@ -54,13 +48,26 @@ class EventController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, Event $event) {
+    public function update(EventRequest $request, Event $event) {
         $this->authorize('update', $event);
-        $user = $request->user();
+        $request->validated();
+        $event = Event::where('id', $event->id)->first();
 
+        $event->update($request->all());
+
+        return response()->json([
+            'message' => 'event updated',
+            'data' => $event
+        ], 200);
     }
 
-    public function delete() {
+    public function destroy(Event $event) {
+        $this->authorize('delete', $event);
+        
+        $event->delete($event->id);
 
+        return response()->json([
+            'message' => 'event deleted'
+        ], 200);
     }
 }
