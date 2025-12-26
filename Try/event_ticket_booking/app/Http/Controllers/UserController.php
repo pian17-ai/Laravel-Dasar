@@ -56,7 +56,7 @@ class UserController extends Controller
         $user->tokens()->delete();
 
         return response()->json([
-            'logged'
+            'message' => 'logged'
         ], 200);
     }
 }
