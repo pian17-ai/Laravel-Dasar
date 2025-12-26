@@ -33,6 +33,12 @@ class EventController extends Controller
     public function store(StoreEventRequest $request) {
         $request->validated();
         $user = $request->user();
+
+        if ($user->role !== 'admin') {
+            return response()->json([
+                'message' => 'unauthorized'
+            ], 403);
+        }
         
         $data = Event::create([
             'title' => $request->title,
