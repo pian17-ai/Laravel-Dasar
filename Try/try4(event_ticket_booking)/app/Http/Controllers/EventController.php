@@ -2,9 +2,64 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Event\StoreEventRequest;
+use App\Http\Requests\Event\UpdateEventRequest;
+use App\Models\Event;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    //
+    public function index() {
+        $events = Event::all();
+
+        return response()->json([
+            'message' => 'success get all data',
+            'data' => $events
+        ], 200);
+    }
+
+    public function show(Event $event) {
+        return response()->json([
+            'message' => 'success get data',
+            'data' => $event
+        ], 200);
+    }
+
+    public function store(StoreEventRequest $request) {
+        $request->validated();
+        $user = $request->user();
+
+        $event = Event::create([
+            'title' => $request->title,
+            'location' => $request->location,
+            'event_date' => $request->event_date,
+            'price' => $request->price,
+            'created_by' => $user->id,
+        ]);
+
+        return response()->json([
+            'message' => 'event added',
+            'data' => $event
+        ], 201);
+    }
+    
+    public function update(UpdateEventRequest $request, Event $event) {
+        $validated = $request->validated();
+
+        $event->update($validated);
+
+        return response()->json([
+            'message' => 'event updated'
+        ], 200);
+    }
+
+    public function destroy($id) {
+        $event = Event::where('id', $id)->first();
+
+        if (!$event) {
+            return response()->json([
+                'message' => 'event not found'
+            ], 404);
+        }
+    }
 }
