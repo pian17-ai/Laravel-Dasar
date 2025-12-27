@@ -1,5 +1,211 @@
 # Laravel-Dasar
 
+# Ringkasan Laravel — Cheat Sheet 🚀
+
+---
+
+## 1️⃣ Route Model Binding
+
+**Fungsi:** Ambil data otomatis dari URL
+
+```php
+Route::get('/event/{event}', [EventController::class, 'show']);
+
+public function show(Event $event)
+```
+
+**Yang terjadi:**
+
+* Laravel otomatis cari `events.id = {event}`
+* Kalau ketemu → lanjut
+* Kalau tidak → **404 otomatis**
+
+**Dipakai kapan?**
+
+* Ambil 1 data (show, update, delete)
+
+---
+
+## 2️⃣ Form Request
+
+**Fungsi:** Validasi request supaya controller bersih
+
+```bash
+php artisan make:request StoreEventRequest
+```
+
+```php
+$request->validated();
+```
+
+**Keuntungan:**
+
+* Validasi rapi
+* Bisa reuse
+* Controller lebih pendek
+
+**Dipakai kapan?**
+
+* Create / Update
+
+---
+
+## 3️⃣ Middleware
+
+**Fungsi:** Filter request sebelum masuk controller
+
+```php
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/event', ...);
+});
+```
+
+**Contoh kegunaan:**
+
+* Login / auth
+* Role
+* Rate limit
+
+**Rule:**
+
+> Middleware = "boleh masuk atau tidak"
+
+---
+
+## 4️⃣ Policy 🔥
+
+**Fungsi:** Cek HAK AKSES ke data
+
+```php
+public function update(User $user, Event $event)
+{
+    return $user->id === $event->created_by;
+}
+```
+
+Dipanggil di controller:
+
+```php
+$this->authorize('update', $event);
+```
+
+**Bedanya sama middleware?**
+
+| Middleware | Policy          |
+| ---------- | --------------- |
+| Cek user   | Cek user + data |
+| Global     | Spesifik model  |
+
+---
+
+## 5️⃣ Resource (API Resource)
+
+**Fungsi:** Format JSON response
+
+```php
+return new EventResource($event);
+```
+
+**Kenapa perlu?**
+
+* Sembunyiin field
+* Rename field
+* Konsisten
+
+**Dipakai kapan?**
+
+* API serius
+* LKS
+
+---
+
+## 6️⃣ Exception Handling (Laravel 12)
+
+**Fungsi:** Handle error secara global
+
+Lokasi:
+
+```php
+bootstrap/app.php
+```
+
+Contoh:
+
+```php
+$exceptions->render(function (NotFoundHttpException $e, $request) {
+    return response()->json(['message' => 'Not Found'], 404);
+});
+```
+
+**Catatan penting:**
+
+* Route Model Binding → `NotFoundHttpException`
+* BUKAN `ModelNotFoundException`
+
+---
+
+## 7️⃣ Controller (Best Practice)
+
+**Rule emas:**
+
+> Controller = tipis
+
+Isi ideal:
+
+* Ambil request
+* Panggil policy
+* Return response
+
+---
+
+## 8️⃣ Alur Request Laravel (Gampang Diingat)
+
+```
+Client
+ ↓
+Middleware
+ ↓
+FormRequest (validasi)
+ ↓
+Controller
+ ↓
+Policy (izin)
+ ↓
+Model
+ ↓
+Resource
+ ↓
+Response JSON
+```
+
+---
+
+## 9️⃣ Mana yang WAJIB vs OPSIONAL (LKS Mode)
+
+### ✅ WAJIB PAKE
+
+* Route Model Binding
+* FormRequest
+* Policy (update/delete)
+* Resource
+
+### ❌ BOLEH SKIP DULU
+
+* Repository Pattern
+* Service Class
+* Event Listener
+
+---
+
+## 🔑 Kalimat Sakti (Kalau Lupa)
+
+* **Middleware:** boleh masuk?
+* **Policy:** boleh ngapain?
+* **FormRequest:** data valid?
+* **Resource:** response rapi?
+* **Exception:** error konsisten?
+
+---
 
 # Status Response
 ---
