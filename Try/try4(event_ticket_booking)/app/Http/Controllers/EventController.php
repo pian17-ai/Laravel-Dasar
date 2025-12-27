@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Event\StoreEventRequest;
 use App\Http\Requests\Event\UpdateEventRequest;
 use App\Models\Event;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class EventController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         $events = Event::all();
 
         return response()->json([
@@ -18,14 +21,16 @@ class EventController extends Controller
         ], 200);
     }
 
-    public function show(Event $event) {
+    public function show(Event $event)
+    {
         return response()->json([
             'message' => 'success get data',
             'data' => $event
         ], 200);
     }
 
-    public function store(StoreEventRequest $request) {
+    public function store(StoreEventRequest $request)
+    {
         $request->validated();
         $user = $request->user();
 
@@ -42,8 +47,9 @@ class EventController extends Controller
             'data' => $event
         ], 201);
     }
-    
-    public function update(UpdateEventRequest $request, Event $event) {
+
+    public function update(UpdateEventRequest $request, Event $event)
+    {
         $validated = $request->validated();
 
         $event->update($validated);
@@ -53,13 +59,12 @@ class EventController extends Controller
         ], 200);
     }
 
-    public function destroy($id) {
-        $event = Event::where('id', $id)->first();
+    public function destroy(Event $event)
+    {
+        $event->delete();
 
-        if (!$event) {
-            return response()->json([
-                'message' => 'event not found'
-            ], 404);
-        }
+        return response()->json([
+            'message' => 'event deleted'
+        ], 200);
     }
 }
