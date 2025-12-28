@@ -44,6 +44,7 @@ class EventController extends Controller
     }
 
     public function update(UpdateEventRequest $request, Event $event) {
+        $this->authorize('update', $event);
         $validated = $request->validated();
 
         $event->update($validated);
@@ -54,6 +55,7 @@ class EventController extends Controller
     }
 
     public function destroy(Event $event) {
+        $this->authorize('delete', $event);
         $event->delete();
 
         return response()->json([
