@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Event\StoreEventRequest;
 use App\Http\Requests\Event\UpdateEventRequest;
 use App\Models\Event;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class EventController extends Controller
 {
@@ -50,8 +48,8 @@ class EventController extends Controller
 
     public function update(UpdateEventRequest $request, Event $event)
     {
+        $this->authorize('update', $event);
         $validated = $request->validated();
-
         $event->update($validated);
 
         return response()->json([
@@ -61,6 +59,7 @@ class EventController extends Controller
 
     public function destroy(Event $event)
     {
+        $this->authorize('delete', $event);
         $event->delete();
 
         return response()->json([
