@@ -7,12 +7,14 @@ use App\Models\Booking;
 use App\Models\Event;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 use function Symfony\Component\Clock\now;
 
 class BookingController extends Controller
 {
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $user = $request->user();
 
         $bookings = Booking::where('user_id', $user->id)->get();
@@ -24,8 +26,9 @@ class BookingController extends Controller
             'data' => BookingResource::collection($bookings)
         ], 200);
     }
-    
-    public function show(Booking $booking) {
+
+    public function show(Booking $booking)
+    {
         $this->authorize('view', $booking);
         $booking->load('user');
         $booking->load('ticket');
@@ -36,7 +39,8 @@ class BookingController extends Controller
         ], 200);
     }
 
-    public function store(Request $request, Ticket $ticket) {
+    public function store(Request $request, Ticket $ticket)
+    {
         $user = $request->user();
         $checkAlreadyBook = Booking::where('user_id', $user->id)->where('ticket_id', $ticket->id)->first();
 
@@ -46,34 +50,36 @@ class BookingController extends Controller
             ], 409);
         }
 
-        $checkAlreadyQuota = $ticket->quota;
-        if ($checkAlreadyQuota == 0) {
-            return response()->json([
-                'message' => 'quota exhausted'
-            ], 400);
-        }
+        $booking = DB::transaction(function () use ($ticket, $user) {
+            $ticket->lockForUpdate(); // LKSN Concept
 
-        $book = Booking::create([
-            'user_id' => $user->id,
-            'ticket_id' => $ticket->id,
-            'status' => 'booked',
-            'booked_at' => now()
-        ]);
+            if ($ticket->quota <= 0) {
+                abort(400, 'quota exhausted');
+            }
 
-        $ticket->update([
-            'quota' => $checkAlreadyQuota -1
-        ]);
+            $booking = Booking::create([
+                'user_id' => $user->id,
+                'ticket_id' => $ticket->id,
+                'status' => 'booked',
+                'booked_at' => now()
+            ]);
 
-        $book->load('user');
-        $book->load('ticket');
+            $ticket->decrement('quota');
+
+            return $booking;
+        });
+
+        $booking->load(['user', 'ticket']);
+
 
         return response()->json([
             'message' => 'book added',
-            'data' => new BookingResource($book)
+            'data' => new BookingResource($booking)
         ], 200);
     }
 
-    public function destroy(Booking $booking) {
+    public function destroy(Booking $booking)
+    {
         $this->authorize('delete', $booking);
         $booking->delete();
 
@@ -82,7 +88,8 @@ class BookingController extends Controller
         ]);
     }
 
-    public function indexAdmin(Ticket $ticket) {
+    public function indexAdmin(Ticket $ticket)
+    {
         $event = Event::where('id', $ticket->event_id)->first();
         $this->authorize('viewAny', [Booking::class, $event]);
         $bookings = Booking::where('ticket_id', $ticket->id)->get();

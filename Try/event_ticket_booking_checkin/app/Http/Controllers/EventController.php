@@ -36,7 +36,7 @@ class EventController extends Controller
             'title' => $request->title,
             'location' => $request->location,
             'event_date' => $request->event_date,
-            'price' => $request->price,
+            // 'price' => $request->price, | Price not found in Event
             'created_by' => $user->id
         ]);
 

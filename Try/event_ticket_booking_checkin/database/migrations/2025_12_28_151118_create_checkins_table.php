@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('booking_id')->constrained('bookings');
             $table->dateTime('checked_in_at');
+
+            $table->unique('booking_id');
         });
     }
 
