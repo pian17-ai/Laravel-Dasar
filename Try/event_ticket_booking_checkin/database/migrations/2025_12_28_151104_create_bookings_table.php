@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('ticket_id')->constrained('tickets');
-            $table->enum('status', ['booked', 'checked_in']);
+            $table->enum('status', ['booked', 'checked_in'])->default('booked');
             $table->dateTime('booked_at');
         });
     }

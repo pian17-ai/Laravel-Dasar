@@ -4,24 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Event\StoreEventRequest;
 use App\Http\Requests\Event\UpdateEventRequest;
+use App\Http\Resources\Event\EventWithTicketResource;
 use App\Models\Event;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
     public function index() {
-        $events = Event::get();
+        $events = Event::with('tickets')->get();
 
         return response()->json([
             'message' => 'success get data',
-            'data' => $events
+            'data' => EventWithTicketResource::collection($events)
         ], 200);
+
     }
 
     public function show(Event $event) {
         return response()->json([
             'message' => 'success get data',
-            'data' => $event 
+            'data' => new EventWithTicketResource($event)
         ], 200);
     }
 

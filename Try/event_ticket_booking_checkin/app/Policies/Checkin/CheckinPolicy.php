@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Policies;
+namespace App\Policies\Checkin;
 
-use App\Models\Event;
-use App\Models\Ticket;
+use App\Models\Booking;
+use App\Models\Checkin;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class TicketPolicy
+class CheckinPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -20,7 +20,7 @@ class TicketPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Ticket $ticket): bool
+    public function view(User $user, Checkin $checkin): bool
     {
         return false;
     }
@@ -28,9 +28,9 @@ class TicketPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user, Event $event)
+    public function create(User $user, Booking $booking)
     {
-        if ($user->id !== $event->created_by) {
+        if ($user->id !== $booking->user_id) {
             return Response::deny('access forbidden');
         }
 
@@ -40,31 +40,23 @@ class TicketPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Ticket $ticket)
+    public function update(User $user, Checkin $checkin): bool
     {
-        if ($user->id !== $ticket->event->created_by) {
-            return Response::deny('access forbidden');;
-        }
-
-        return Response::allow();
+        return false;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Ticket $ticket)
+    public function delete(User $user, Checkin $checkin): bool
     {
-        if ($user->id !== $ticket->event->created_by) {
-            return Response::deny('access forbidden');;
-        }
-        
-        return Response::allow();
+        return false;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Ticket $ticket): bool
+    public function restore(User $user, Checkin $checkin): bool
     {
         return false;
     }
@@ -72,7 +64,7 @@ class TicketPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Ticket $ticket): bool
+    public function forceDelete(User $user, Checkin $checkin): bool
     {
         return false;
     }
