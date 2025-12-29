@@ -16,6 +16,10 @@ class Event extends Model
     public $timestamps = false;
 
     public function creator() {
-        $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function tickets() {
+        return $this->hasMany(Ticket::class);
     }
 }

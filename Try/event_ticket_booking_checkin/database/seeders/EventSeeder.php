@@ -16,10 +16,18 @@ class EventSeeder extends Seeder
     public function run(): void
     {
         DB::table('events')->insert([
-            'title' => 'GDG Jakarta 2025',
-            'location' => 'MH Tamrin, Central Jakarta',
-            'event_date' => now(),
-            'created_by' => 2
+            [
+                'title' => 'GDG Jakarta 2025',
+                'location' => 'MH Tamrin, Central Jakarta',
+                'event_date' => now(),
+                'created_by' => 2
+            ],
+            [
+                'title' => 'Firework Festival',
+                'location' => 'Monas, Central Jakarta',
+                'event_date' => now(),
+                'created_by' => 3
+            ],
         ]);
     }
 }

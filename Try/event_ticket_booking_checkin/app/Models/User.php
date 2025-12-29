@@ -16,4 +16,12 @@ class User extends AuthUser
         'password',
         'role'
     ];
+
+    public function events() {
+        return $this->hasMany(Event::class);
+    }
+
+    public function bookings() {
+        return $this->hasMany(Booking::class);
+    }
 }
