@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email');
-            $table->string('password');
-            $table->enum('role', ['admin', 'officer', 'user'])->default('user');
-            $table->timestamps();
-
-            $table->unique('email');
+            $table->string('title');
+            $table->dateTime('start_time');
+            $table->dateTime('end_time');
+            $table->foreignId('created_by')->constrained('users');
+            $table->boolean('is_active');
         });
     }
 
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('events');
     }
 };

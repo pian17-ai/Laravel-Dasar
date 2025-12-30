@@ -15,4 +15,16 @@ class User extends AuthUser
         'password',
         'role'
     ];
+
+    public function events() {
+        return $this->hasMany(Event::class);
+    }
+
+    public function booking() {
+        return $this->hasMany(Booking::class);
+    }
+
+    public function checkin() {
+        return $this->hasMany(Checkin::class);
+    }
 }
