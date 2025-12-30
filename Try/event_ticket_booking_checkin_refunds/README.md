@@ -1,59 +1,233 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+SIAP 😄
+Kalau kemarin kamu sudah **Event – Ticket – Booking – Check-in**, kita naik level ya. Ini **latihan yang mirip LKS tapi lebih “jahat”** 🔥
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+---
 
-## About Laravel
+## 🚀 CASE ADVANCED: EVENT TICKET SYSTEM (LEVEL LKS++)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 🧠 Konsep baru yang dilatih
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Latihan ini **bukan cuma CRUD**, tapi:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* Relasi kompleks
+* Validasi bisnis
+* Transaction
+* Authorization (Policy)
+* Query advance
+* Status flow (state machine ringan)
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 🧩 STUDI KASUS
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 📌 Fitur Utama
 
-## Laravel Sponsors
+1. **Event**
+2. **Ticket Type** (VIP, Regular, dll)
+3. **Booking**
+4. **Check-in**
+5. **Refund**
+6. **Quota & Time Constraint**
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 🗂️ STRUKTUR TABLE
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 1️⃣ events
 
-## Contributing
+| field      | type     |
+| ---------- | -------- |
+| id         | bigint   |
+| title      | string   |
+| start_time | datetime |
+| end_time   | datetime |
+| created_by | user_id  |
+| is_active  | boolean  |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+### 2️⃣ tickets
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| field    | type    |
+| -------- | ------- |
+| id       | bigint  |
+| event_id | fk      |
+| name     | string  |
+| price    | integer |
+| quota    | integer |
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 3️⃣ bookings
 
-## License
+| field     | type                                                       |
+| --------- | ---------------------------------------------------------- |
+| id        | bigint                                                     |
+| user_id   | fk                                                         |
+| ticket_id | fk                                                         |
+| status    | enum(`pending`,`paid`,`checked_in`,`cancelled`,`refunded`) |
+| booked_at | datetime                                                   |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+⚠️ **RULE:**
+`user_id + ticket_id` **HARUS UNIQUE**
+
+---
+
+### 4️⃣ checkins
+
+| field         | type     |
+| ------------- | -------- |
+| id            | bigint   |
+| booking_id    | fk       |
+| checked_in_at | datetime |
+| officer_id    | user_id  |
+
+---
+
+### 5️⃣ refunds
+
+| field       | type     |
+| ----------- | -------- |
+| id          | bigint   |
+| booking_id  | fk       |
+| reason      | text     |
+| refunded_at | datetime |
+
+---
+
+## 🔥 CHALLENGE LOGIC (INI YANG SUSAH)
+
+---
+
+### 1️⃣ BOOKING TICKET
+
+Endpoint:
+
+```
+POST /api/events/{event}/tickets/{ticket}/book
+```
+
+#### Rules:
+
+* ❌ Event sudah selesai → reject
+* ❌ Ticket quota habis → reject
+* ❌ User sudah booking ticket itu → reject
+* ✅ Jika sukses:
+
+  * buat booking status `paid`
+  * kurangi quota ticket
+  * pakai **DB::transaction()**
+
+---
+
+### 2️⃣ CHECK-IN TICKET
+
+Endpoint:
+
+```
+POST /api/bookings/{booking}/checkin
+```
+
+#### Rules:
+
+* ❌ booking bukan milik event hari ini
+* ❌ status ≠ `paid`
+* ❌ sudah check-in
+* ✅ jika sukses:
+
+  * status → `checked_in`
+  * insert ke table `checkins`
+
+---
+
+### 3️⃣ REFUND TICKET
+
+Endpoint:
+
+```
+POST /api/bookings/{booking}/refund
+```
+
+#### Rules:
+
+* ❌ sudah check-in → tidak bisa refund
+* ❌ event sudah mulai → tidak bisa refund
+* ✅ refund:
+
+  * status → `refunded`
+  * quota ticket +1
+  * simpan reason
+
+---
+
+### 4️⃣ AUTHORIZATION (POLICY)
+
+| Aksi         | Siapa   |
+| ------------ | ------- |
+| Create Event | Admin   |
+| Check-in     | Officer |
+| Refund       | Admin   |
+| Booking      | User    |
+
+👉 **WAJIB pakai Policy**, bukan if biasa
+
+---
+
+### 5️⃣ QUERY LEVEL LKS
+
+Buat endpoint:
+
+```
+GET /api/events/{event}/summary
+```
+
+Response:
+
+```json
+{
+  "total_ticket": 300,
+  "total_booking": 250,
+  "total_checked_in": 180,
+  "total_refunded": 20,
+  "income": 12500000
+}
+```
+
+⚠️ **Hint:**
+
+* `withCount`
+* `sum`
+* join bookings + tickets
+
+---
+
+## 🧪 BONUS (KALAU MAU NAIK LEVEL DEWA 😈)
+
+* Soft delete booking → tapi quota tetap balik
+* Middleware `event.active`
+* Booking auto expired kalau `paid` > 30 menit (scheduler)
+* Resource API + pagination
+* Error code pakai HTTP status yang benar
+
+---
+
+## 🎯 TARGET KAMU
+
+Kalau kamu bisa:
+
+* desain migration
+* controller logic clean
+* pakai transaction + policy
+* query summary benar
+
+👉 **itu udah SETARA LKS PROVINSI 🔥**
+
+---
+
+Kalau mau, bilang:
+
+* 👉 **“Bang, breakdown step by step”**
+* 👉 **“Bang, kasih ERD dulu”**
+* 👉 **“Bang, gue mau langsung disuruh bikin controller doang”**
+
+Aku gasin sesuai gaya belajar kamu 😎
