@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
@@ -29,4 +30,12 @@ Route::middleware('auth:sanctum', 'admin')->group(function() {
     Route::post('/events/{event}/tickets', [TicketController::class, 'store']);
     Route::put('/tickets/{ticket}', [TicketController::class, 'update']);
     Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy']);
+});
+
+//booking
+Route::middleware('auth:sanctum')->group(function() {
+    Route::get('/bookings', [BookingController::class, 'index']);
+    Route::get('/bookings/{booking}', [BookingController::class, 'show']);
+    Route::post('/events/{event}/tickets/{ticket}', [BookingController::class, 'store']);
+    Route::middleware('admin')->get('/tickets/{ticket}/bookings', [BookingController::class, 'adminIndex']);
 });

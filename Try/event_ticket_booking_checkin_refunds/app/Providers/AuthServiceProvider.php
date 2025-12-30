@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Booking;
 use App\Models\Event;
 use App\Models\Ticket;
+use App\Policies\Booking\BookingPolicy;
 use App\Policies\Event\EventPolicy;
 use App\Policies\Ticket\TicketPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ProvidersAuthServiceProvider;
@@ -13,7 +15,8 @@ class AuthServiceProvider extends ProvidersAuthServiceProvider
 {
     protected $policies = [
         Event::class => EventPolicy::class,
-        Ticket::class => TicketPolicy::class
+        Ticket::class => TicketPolicy::class,
+        Booking::class => BookingPolicy::class
     ];
     /**
      * Register services.
