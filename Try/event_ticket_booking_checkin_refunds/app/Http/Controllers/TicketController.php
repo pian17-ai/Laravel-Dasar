@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Ticket\TicketRequest;
+use App\Http\Resources\Ticket\TicketResource;
 use App\Models\Event;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
@@ -10,26 +12,24 @@ class TicketController extends Controller
 {
     public function index() {
         $tickets = Ticket::get();
+        $tickets->load('event');
 
         return response()->json([
             'message' => 'success get all tickets',
-            'data' => $tickets
+            'data' => TicketResource::collection($tickets)
         ], 200);
     }
 
     public function show(Ticket $ticket) {
         return response()->json([
             'message' => 'success get ticket',
-            'data' => $ticket
+            'data' => new TicketResource($ticket)
         ], 200);
     }
 
-    public function store(Event $event, Request $request) {
-        $request->validate([
-            'name' => 'required',
-            'price' => 'required|integer',
-            'quota' => 'required|integer'
-        ]);
+    public function store(TicketRequest $request, Event $event) {
+        $this->authorize('create', [Ticket::class, $event]);
+        $request->validated();
 
         $ticket = Ticket::create([
             'event_id' => $event->id,
@@ -40,26 +40,26 @@ class TicketController extends Controller
 
         return response()->json([
             'message' => 'ticket added',
-            'data' => $ticket
+            'data' => new TicketResource($ticket)
         ], 201);
     }
 
-    public function update(Request $request, Ticket $ticket) {
-        $validated = $request->validate([
-            'name' => 'required',
-            'price' => 'required|integer',
-            'quota' => 'required|integer'
-        ]);
+    public function update(TicketRequest $request, Ticket $ticket) {
+        $event = Event::where('id', $ticket->event_id)->first();
+        $this->authorize('update', [Ticket::class, $event]);
+        $request->validated();
 
-        $ticket->update($validated);
+        $ticket->update($request->validated());
 
         return response()->json([
             'message' => 'event updated',
-            'data' => $ticket
+            'data' => new TicketResource($ticket)
         ], 200);
     }
 
     public function destroy(Ticket $ticket) {
+        $event = Event::where('id', $ticket->event_id)->first();
+        $this->authorize('delete', [Ticket::class, $event]);
         $ticket->delete();
 
         return response()->json([
