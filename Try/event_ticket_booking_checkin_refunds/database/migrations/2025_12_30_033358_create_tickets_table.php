@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('event_id')->constrained('events');
             $table->string('name');
-            $table->integer('price');
-            $table->integer('quota');
+            $table->unsignedInteger('price');
+            $table->unsignedInteger('quota');
+            $table->timestamps();
         });
     }
 

@@ -17,7 +17,8 @@ return new class extends Migration
             $table->dateTime('start_time');
             $table->dateTime('end_time');
             $table->foreignId('created_by')->constrained('users');
-            $table->boolean('is_active');
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
         });
     }
 

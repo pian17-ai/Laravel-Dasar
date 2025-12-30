@@ -16,7 +16,10 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('ticket_id')->constrained('tickets');
             $table->enum('status', ['pending', 'paid', 'checked_in', 'cancelled', 'refunded'])->default('pending');
-            $table->dateTime('booked_at');
+            $table->dateTime('booked_at')->useCurrent(); //
+            $table->timestamps();
+
+            $table->unique(['user_id', 'ticket_id']); //user and ticket is unique
         });
     }
 

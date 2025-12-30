@@ -17,14 +17,14 @@ class User extends AuthUser
     ];
 
     public function events() {
-        return $this->hasMany(Event::class);
+        return $this->hasMany(Event::class, 'created_by');
     }
 
-    public function booking() {
+    public function bookings() {
         return $this->hasMany(Booking::class);
     }
 
-    public function checkin() {
+    public function checkins() {
         return $this->hasMany(Checkin::class);
     }
 }

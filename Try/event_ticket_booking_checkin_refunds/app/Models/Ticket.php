@@ -13,8 +13,6 @@ class Ticket extends Model
         'quota'
     ];
 
-    public $timestamps = false;
-
     public function event() {
         return $this->belongsTo(Event::class);
     }

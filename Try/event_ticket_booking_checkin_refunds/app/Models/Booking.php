@@ -13,8 +13,6 @@ class Booking extends Model
         'booked_at'
     ];
 
-    public $timestamps = false;
-
     public function user() {
         return $this->belongsTo(User::class);
     }

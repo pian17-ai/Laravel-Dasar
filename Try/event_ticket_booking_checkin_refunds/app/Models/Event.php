@@ -14,8 +14,6 @@ class Event extends Model
         'is_active'
     ];
 
-    public $timestamps = false;
-
     public function creator() {
         return $this->belongsTo(User::class, 'created_by');
     }

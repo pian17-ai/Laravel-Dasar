@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('booking_id')->constrained('bookings');
             $table->text('reason');
             $table->dateTime('refunded_at');
+
+            $table->unique('booking_id');
         });
     }
 
