@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\CheckinController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
@@ -39,3 +40,6 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('/events/{event}/tickets/{ticket}', [BookingController::class, 'store']);
     Route::middleware('admin')->get('/tickets/{ticket}/bookings', [BookingController::class, 'adminIndex']);
 });
+
+//checkin
+Route::middleware('auth:sanctum', 'officer')->post('/booking/{booking}/checkin', [CheckinController::class, 'store']);
