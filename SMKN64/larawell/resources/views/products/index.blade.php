@@ -17,7 +17,7 @@
                 </div>
                 <div class="card border=0 shadow-sm rounded">
                     <div class="card-body">
-                        <a href="" class="btn btn-md btn-success mb-3">Add Product</a>
+                        <a href="{{ route('products.create') }}" class="btn btn-md btn-success mb-3">Add Product</a>
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -38,11 +38,11 @@
                                     <td>{{ "Rp" . number_format($product->price, 2, ',','.') }}</td>
                                     <td>{{ $product->stock }}</td>
                                     <td class="text-center">
-                                        <form onsubmit="return confirm('Apakah anda yakin?');" action="" method="POST">
-                                            <a href="" class="btn btn-sm btn dark">Show</a>
-                                            <a href="" class="btn btn-sm btn primary">Edit</a>
+                                        <form onsubmit="return confirm('Apakah anda yakin?');" action="{{ route('products.destroy', $product->id) }}" method="POST">
+                                            <a href="{{ route('products.show',$product->id) }}" class="btn btn-sm btn-dark">Show</a>
+                                            <a href="{{ route('products.update', $product->id) }}" class="btn btn-sm btn-primary">Edit</a>
                                             @csrf
-                                            @methode DELETE
+                                            @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
                                         </form>
                                     </td>
